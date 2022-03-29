@@ -1,11 +1,14 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import { Chivero } from './chivero/Chivero';
+
+const MOCK_DATA = [12, 45, 69, 78, 99];
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <header className="App-header"> Snakes everywhere
+        {/* <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -16,8 +19,9 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
-        </a>
+        </a> */}
       </header>
+      <Chivero payload={MOCK_DATA} />
     </div>
   );
 }
