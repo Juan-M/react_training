@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { makeStyles } from '@mui/styles';
-import snakeHead from './snakeHead.svg';
+import snakeHead from '../imgs/snakeHead.svg';
 
 
 const useStyles = makeStyles(theme => ({
@@ -47,9 +47,8 @@ export const Chivero = (props) => {
   }, [props.payload]);
 
   return (
-  <>
     <div className={classes.chachi}>
       <svg className={classes.chivero__container} ref={gContainer} width="800" height="600"/>
     </div>
-  </>);
+  );
 };
