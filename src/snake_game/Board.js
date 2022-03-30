@@ -15,10 +15,7 @@ const updateBoard = (board, items) => {
     row.filter(item => item.type === ITEM_TYPES.clover)
   ), []);
 
-  console.log(cloverArray)
-
   container.selectAll('image.clover').remove();
-
   container
     .selectAll('image.clover')
     .data(cloverArray)
