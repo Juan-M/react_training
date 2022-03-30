@@ -1,18 +1,10 @@
-import { useRef, useState, forwardRef, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@mui/styles';
-import { WINDS } from './consts';
+import { WINDS, BOARD_DIMENSIONS, BOARD_LIMITS, INITIAL_SNAKE, EMPTY_BOARD, ITEM_TYPES } from './consts';
+import { Board } from './Board';
 import { Snake } from './Snake';
 
-const BOARD_LIMITS = {
-  cellSide: 30,
-  height: 20, 
-  width: 26,
-};
-
-const BOARD_DIMENSIONS = {
-  width: BOARD_LIMITS.cellSide * BOARD_LIMITS.width,
-  height: BOARD_LIMITS.cellSide * BOARD_LIMITS.height,
-}
+const CLOVERS_RATIO = 0.2;
 
 const useStyles = makeStyles(() => ({
   game: {
@@ -36,23 +28,20 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const INITIAL_SNAKE = [
-  { direction: 'west', x: 10, y: 9 },  // head
-  { direction: 'west', x: 11, y: 9 },  // middle segments
-  { direction: 'west', x: 12, y: 9 },  // middle segments
-  { direction: 'west', x: 13, y: 9 },  // middle segments
-  { direction: 'west', x: 14, y: 9 },  // middle segments
-  { direction: 'west', x: 15, y: 9 },  // Tail
-];
-
-const Board = forwardRef((props, ref) => (
-  <svg className={props.className} ref={ref} width={BOARD_DIMENSIONS.width} height={BOARD_DIMENSIONS.height} />
+const initBoard = (baseBoard) => baseBoard.map((row) => row.map(
+  (cell) => ({
+    ...cell,
+    type: (Math.random() < CLOVERS_RATIO)
+      && !(INITIAL_SNAKE.find(s => s.x === cell.x && s.y === cell.y)) ? ITEM_TYPES.clover : cell.type
+  })
 ));
 
 export const SnakeGame = () => {
   const classes = useStyles();
   const gContainer = useRef();
-  const [snakeSegments, setSnakeSegments] = useState(INITIAL_SNAKE);
+  const [snakeSegments, setSnakeSegments] = useState(INITIAL_SNAKE.map(s => ({...s})));
+  const [boardItems, setBoardItems] = useState(initBoard(EMPTY_BOARD));
+
   const handleKeyDown = useCallback((e) => {
     switch (e.code) {
       case 'ArrowUp':
@@ -81,9 +70,9 @@ export const SnakeGame = () => {
 
   const handleUp = () => {
     setSnakeSegments(segs => {
-      if (segs[0].y > 0 && segs[0].direction !== WINDS.south) {
+      if (segs[0].y > 0 && segs[0].facing !== WINDS.south) {
         const newSegs = segs.slice(0, -1);
-        newSegs.unshift({...segs[0], direction: WINDS.north, y: segs[0].y - 1})
+        newSegs.unshift({...segs[0], facing: WINDS.north, y: segs[0].y - 1})
         return newSegs;
       }
       return segs;
@@ -91,9 +80,9 @@ export const SnakeGame = () => {
   }; 
   const handleRight = () => {
     setSnakeSegments(segs => {
-      if (segs[0].x < BOARD_LIMITS.width - 1 && segs[0].direction !== WINDS.west) {
+      if (segs[0].x < BOARD_LIMITS.width - 1 && segs[0].facing !== WINDS.west) {
         const newSegs = segs.slice(0, -1);
-        newSegs.unshift({...segs[0], direction: WINDS.east, x: segs[0].x + 1})
+        newSegs.unshift({...segs[0], facing: WINDS.east, x: segs[0].x + 1})
         return newSegs;
       }
       return segs;
@@ -101,9 +90,9 @@ export const SnakeGame = () => {
   }; 
   const handleDown = () => {
     setSnakeSegments(segs => {
-      if (segs[0].y < BOARD_LIMITS.height - 1 && segs[0].direction !== WINDS.north) {
+      if (segs[0].y < BOARD_LIMITS.height - 1 && segs[0].facing !== WINDS.north) {
         const newSegs = segs.slice(0, -1);
-        newSegs.unshift({...segs[0], direction: WINDS.south, y: segs[0].y + 1})
+        newSegs.unshift({...segs[0], facing: WINDS.south, y: segs[0].y + 1})
         return newSegs;
       }
       return segs;
@@ -111,9 +100,9 @@ export const SnakeGame = () => {
   }; 
   const handleLeft = () => {
     setSnakeSegments(segs => {
-      if (segs[0].x > 0 && segs[0].direction !== WINDS.east) {
+      if (segs[0].x > 0 && segs[0].facing !== WINDS.east) {
         const newSegs = segs.slice(0, -1);
-        newSegs.unshift({...segs[0], direction: WINDS.west, x: segs[0].x - 1})
+        newSegs.unshift({...segs[0], facing: WINDS.west, x: segs[0].x - 1})
         return newSegs;
       }
       return segs;
@@ -122,8 +111,8 @@ export const SnakeGame = () => {
   
   return (
     <div className={classes.game}>
-      <Board className={classes.game__container} ref={gContainer}/>
-      <Snake board={gContainer} segments={snakeSegments} cellSide={BOARD_LIMITS.cellSide}/>
+      <Board className={classes.game__container} ref={gContainer} boardItems={boardItems} />
+      <Snake board={gContainer} segments={snakeSegments} />
       <button onClick={handleUp} className={classes.game__direction_button} style={{ top: 0, left: `${Math.ceil(BOARD_DIMENSIONS.width / 3)}px` }}>^</button>
       <button onClick={handleRight} className={classes.game__direction_button} style={{ top: `${Math.ceil(BOARD_DIMENSIONS.height / 4)}px`, right: 0 }}>&gt;</button>
       <button onClick={handleDown} className={classes.game__direction_button} style={{ bottom: '50px', left: `${Math.ceil(BOARD_DIMENSIONS.width / 3)}px` }}>v</button>

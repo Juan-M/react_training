@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import snakeHead from '../imgs/snakeHead.svg';
 import snakeTail from '../imgs/snakeTail.svg';
 import snakeSegment from '../imgs/snakeSegment.svg';
-import { WINDS } from './consts';
+import { WINDS, BOARD_LIMITS } from './consts';
 
 const useStyles = makeStyles(theme => ({
   snake: {
@@ -22,22 +22,24 @@ function svgAttr(segments, pos) {
   return svg;
 };
 
-function updateGraph(board, segments, cellSide) {
-  var container = d3.select(board);
+function updateSerpent(board, segments) {
+  const cellSide = BOARD_LIMITS.cellSide;
+  const container = d3.select(board);
   
-  container.selectAll('*').remove();
+  container.selectAll('image.snake').remove();
   container
-    .selectAll('image')
+    .selectAll('image.snake')
     .data(segments)
     .enter()
     .append('image')
     .attr('xlink:href', (d, p) => svgAttr(segments, p))
+    .attr('class', 'snake')
     .attr('width', cellSide * 1.5)
     .attr('height', cellSide)
     .attr('x', d => d.x * cellSide)
     .attr('y', d => d.y * cellSide)
     .attr('transform', (d) => {
-      switch (d.direction) {
+      switch (d.facing) {
         case WINDS.north:
           return `rotate(90, ${d.x * cellSide + cellSide / 2}, ${d.y * cellSide + cellSide / 2})`;
         case WINDS.east:
@@ -47,9 +49,6 @@ function updateGraph(board, segments, cellSide) {
         default:
           return '';
       }
-       if (d.direction === WINDS.west) {
-         return ''
-       }
     });
 };
 
@@ -57,8 +56,8 @@ export const Snake = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    updateGraph(props.board.current, props.segments, props.cellSide);
-  }, [props.board, props.segments, props.cellSide]);
+    updateSerpent(props.board.current, props.segments);
+  }, [props.board, props.segments]);
 
-  return (<pre className={classes.snake}>Snake head at: {props.segments[0].x} {props.segments[0].y} and going {props.segments[0].direction}, with total snake length {props.segments.length}</pre> );
+  return (<pre className={classes.snake}>Snake head at: {props.segments[0].x} {props.segments[0].y} and going {props.segments[0].facing}, with total snake length {props.segments.length}</pre> );
 };
