@@ -1,18 +1,13 @@
 import { forwardRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import clover from '../imgs/clover.svg';
-import { BOARD_LIMITS, BOARD_DIMENSIONS, ITEM_TYPES } from './consts';
+import { BOARD_LIMITS, BOARD_DIMENSIONS, ITEM_TYPES } from './common';
 
 const updateBoard = (board, items) => {
-  // !!!!! to check the board data
-  // items.forEach(
-  //   row => console.log(row.map(i => i.type.toString()).join().replaceAll('Symbol(', '').replaceAll(',', '').replaceAll(')', ''))
-  // )
-
   const cellSide = BOARD_LIMITS.cellSide;
   const container = d3.select(board);
-  const cloverArray = items.reduce((acc, row) => acc.concat(
-    row.filter(item => item.type === ITEM_TYPES.clover)
+  const cloverArray = items.reduce((acc, column) => acc.concat(
+    column.filter(item => item.type === ITEM_TYPES.clover)
   ), []);
 
   container.selectAll('image.clover').remove();

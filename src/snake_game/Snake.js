@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import snakeHead from '../imgs/snakeHead.svg';
 import snakeTail from '../imgs/snakeTail.svg';
 import snakeSegment from '../imgs/snakeSegment.svg';
-import { WINDS, BOARD_LIMITS } from './consts';
+import { WINDS, BOARD_LIMITS, symbolToStr } from './common';
 
 const useStyles = makeStyles(theme => ({
   snake: {
@@ -59,5 +59,10 @@ export const Snake = (props) => {
     updateSerpent(props.board.current, props.segments);
   }, [props.board, props.segments]);
 
-  return (<pre className={classes.snake}>Snake head at: {props.segments[0].x} {props.segments[0].y} and going {props.segments[0].facing}, with total snake length {props.segments.length}</pre> );
+  return (
+    <pre className={classes.snake}>
+      Snake head at: {props.segments[0].x} {props.segments[0].y} and going {symbolToStr(props.segments[0].facing)},
+      with total snake length {props.segments.length}
+    </pre>
+  );
 };

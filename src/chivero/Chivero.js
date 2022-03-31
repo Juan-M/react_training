@@ -34,8 +34,6 @@ function updateGraph(e, payload) {
     .attr('transform', (d, i) => `rotate(${d} ${(i * 150) + Math.round(d * 0.75)} ${200 + Math.round(d / 2)})`)
     .attr('x', (d, i) => i * 150)
     .attr('y', 200);
-
-  console.log('!!!!----->>>>', container, payload);	
 };
 
 export const Chivero = (props) => {
