@@ -102,7 +102,6 @@ export const SnakeGame = () => {
       <button onClick={handleRight} className={`${classes.game__direction_button} right`} >&gt;</button>
       <button onClick={handleDown} className={`${classes.game__direction_button} down`} >v</button>
       <button onClick={handleLeft} className={`${classes.game__direction_button} left`} >&lt;</button>
-      <pre>x: {game.snake[0].x}, y: {game.snake[0].y}, type: {symbolToStr(game.snake[0].type)}, facing: {symbolToStr(game.snake[0].facing)},</pre>
     </div>
   );
 };
