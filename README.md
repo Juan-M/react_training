@@ -1,3 +1,5 @@
+My own playground to fool around with React.js training exercises. You can grab anything you like from here and even scold me for my missuse of the thing, if you are polite about it.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
